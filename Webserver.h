@@ -4,5 +4,7 @@ class Webserver
 {
 public:
     Webserver();
+    void isBusy();
+    void createRequest();
 }
 #endif

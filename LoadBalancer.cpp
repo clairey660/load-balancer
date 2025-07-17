@@ -12,8 +12,10 @@ LoadBalancer::LoadBalancer(int numOfServers)
 void LoadBalancer::populateQueue(int fullQueue)
 {
 }
+void LoadBalancer::distributeRequests() {}
 void LoadBalancer::incrementTime()
 {
+    ++curTime;
 }
 void LoadBalancer::showResults()
 {
