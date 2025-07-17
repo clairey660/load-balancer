@@ -6,20 +6,27 @@ RequestQueue::RequestQueue()
 
 void RequestQueue::push_back(Request request)
 {
-    ++_size;
+    queue.push(request);
 }
 
 Request RequestQueue::pop()
 {
-    --_size;
+    if (queue.empty())
+    {
+        throw std::runtime_error("Attempted to pop from an empty RequestQueue.");
+    }
+
+    Request front = queue.front();
+    queue.pop();
+    return front;
 }
 
 bool RequestQueue::isEmpty()
 {
-    return _size == 0;
+    return queue.empty();
 }
 
 int RequestQueue::size()
 {
-    return _size;
+    return static_cast<int>(queue.size());
 }

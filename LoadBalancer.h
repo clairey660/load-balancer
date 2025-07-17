@@ -10,11 +10,14 @@ private:
     std::vector<Webserver> servers;
     RequestQueue requestQueue;
     int curTime;
+    int numRequestsProcessed;
+
+    void distributeRequests();
 
 public:
     LoadBalancer(int numOfServers);
     void populateQueue(int fullQueue);
-    void distributeRequests();
+
     void incrementTime();
     void showResults();
 };

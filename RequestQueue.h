@@ -1,12 +1,12 @@
 #include <iostream>
+#include <queue>
 #include "Request.h"
 #ifndef REQUESTQUEUE_H
 #define REQUESTQUEUE_H
 class RequestQueue
 {
 private:
-    std::vector<Request> queue;
-    int _size;
+    std::queue<Request> queue;
 
 public:
     RequestQueue();
