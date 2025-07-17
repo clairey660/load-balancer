@@ -1,0 +1,125 @@
+\doxysection{Webserver Class Reference}
+\hypertarget{class_webserver}{}\label{class_webserver}\index{Webserver@{Webserver}}
+
+
+Represents a single web server that can process one request at a time.  
+
+
+
+
+{\ttfamily \#include $<$Webserver.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_webserver_ac2a6f51bcc54efaaf5f4773a7c24f009}{Webserver}} ()
+\begin{DoxyCompactList}\small\item\em Constructs an idle \doxylink{class_webserver}{Webserver}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_webserver_addff09fafa435a6c90f2d6e83ad932c8}{assign\+Request}} (\mbox{\hyperlink{struct_request}{Request}} \&r)
+\begin{DoxyCompactList}\small\item\em Assigns a new request to the web server. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_webserver_ad19c4784b56ec50abb568f29043e662e}{increment\+Time}} ()
+\begin{DoxyCompactList}\small\item\em Advances the server\textquotesingle{}s processing time by one clock cycle. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_webserver_a9ad4aa45c1016f57e8489d36c498fcc0}{is\+Busy}} ()
+\begin{DoxyCompactList}\small\item\em Checks if the server is currently busy processing a request. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_webserver_a61d54001d92a151afd846e8ba96b3783}{is\+Idle}} () const
+\begin{DoxyCompactList}\small\item\em Checks whether the server is currently idle. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a single web server that can process one request at a time. 
+
+\label{doc-constructors}
+\Hypertarget{class_webserver_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_webserver_ac2a6f51bcc54efaaf5f4773a7c24f009}\index{Webserver@{Webserver}!Webserver@{Webserver}}
+\index{Webserver@{Webserver}!Webserver@{Webserver}}
+\doxysubsubsection{\texorpdfstring{Webserver()}{Webserver()}}
+{\footnotesize\ttfamily \label{class_webserver_ac2a6f51bcc54efaaf5f4773a7c24f009} 
+Webserver\+::\+Webserver (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Constructs an idle \doxylink{class_webserver}{Webserver}. 
+
+Constructor initializes the server as idle. 
+
+\label{doc-func-members}
+\Hypertarget{class_webserver_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_webserver_addff09fafa435a6c90f2d6e83ad932c8}\index{Webserver@{Webserver}!assignRequest@{assignRequest}}
+\index{assignRequest@{assignRequest}!Webserver@{Webserver}}
+\doxysubsubsection{\texorpdfstring{assignRequest()}{assignRequest()}}
+{\footnotesize\ttfamily \label{class_webserver_addff09fafa435a6c90f2d6e83ad932c8} 
+void Webserver\+::assign\+Request (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_request}{Request}} \&}]{r}{}\end{DoxyParamCaption})}
+
+
+
+Assigns a new request to the web server. 
+
+Assigns a request to the web server and sets the processing time.
+
+
+\begin{DoxyParams}{Parameters}
+{\em r} & The \doxylink{struct_request}{Request} to assign.\\
+\hline
+\end{DoxyParams}
+This function marks the server as busy and stores the request details, including the number of cycles required to process it.
+
+
+\begin{DoxyParams}{Parameters}
+{\em r} & The incoming \doxylink{struct_request}{Request} object to be processed. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_webserver_ad19c4784b56ec50abb568f29043e662e}\index{Webserver@{Webserver}!incrementTime@{incrementTime}}
+\index{incrementTime@{incrementTime}!Webserver@{Webserver}}
+\doxysubsubsection{\texorpdfstring{incrementTime()}{incrementTime()}}
+{\footnotesize\ttfamily \label{class_webserver_ad19c4784b56ec50abb568f29043e662e} 
+void Webserver\+::increment\+Time (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Advances the server\textquotesingle{}s processing time by one clock cycle. 
+
+Simulates one clock cycle of processing.
+
+Decrements the remaining time. If the request is finished, marks the server as idle. \Hypertarget{class_webserver_a9ad4aa45c1016f57e8489d36c498fcc0}\index{Webserver@{Webserver}!isBusy@{isBusy}}
+\index{isBusy@{isBusy}!Webserver@{Webserver}}
+\doxysubsubsection{\texorpdfstring{isBusy()}{isBusy()}}
+{\footnotesize\ttfamily \label{class_webserver_a9ad4aa45c1016f57e8489d36c498fcc0} 
+bool Webserver\+::is\+Busy (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Checks if the server is currently busy processing a request. 
+
+Returns whether the server is currently processing a request.
+
+\begin{DoxyReturn}{Returns}
+true if busy, false otherwise.
+
+true if the server is busy; false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{class_webserver_a61d54001d92a151afd846e8ba96b3783}\index{Webserver@{Webserver}!isIdle@{isIdle}}
+\index{isIdle@{isIdle}!Webserver@{Webserver}}
+\doxysubsubsection{\texorpdfstring{isIdle()}{isIdle()}}
+{\footnotesize\ttfamily \label{class_webserver_a61d54001d92a151afd846e8ba96b3783} 
+bool Webserver\+::is\+Idle (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Checks whether the server is currently idle. 
+
+Returns whether the server is currently idle.
+
+A server is considered idle if it is not processing any request.
+
+\begin{DoxyReturn}{Returns}
+true if the server has no current request; false otherwise.
+
+true if no request is being processed; false otherwise. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/Webserver.\+h\item 
+src/Webserver.\+cpp\end{DoxyCompactItemize}

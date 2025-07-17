@@ -1,0 +1,51 @@
+\doxysection{src/main.cpp File Reference}
+\hypertarget{main_8cpp}{}\label{main_8cpp}\index{src/main.cpp@{src/main.cpp}}
+
+
+Entry point for the Load Balancer simulation.  
+
+
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include "{}Load\+Balancer.\+h"{}}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}{main}} ()
+\begin{DoxyCompactList}\small\item\em Main function that drives the load balancer simulation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Entry point for the Load Balancer simulation. 
+
+This program prompts the user for the number of web servers and the duration of the simulation (in clock cycles), then creates a \doxylink{class_load_balancer}{Load\+Balancer} instance and runs the simulation. 
+
+\label{doc-func-members}
+\Hypertarget{main_8cpp_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}\index{main.cpp@{main.cpp}!main@{main}}
+\index{main@{main}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily \label{main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4} 
+int main (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Main function that drives the load balancer simulation. 
+
+Prompts the user for\+:
+\begin{DoxyItemize}
+\item The number of web servers
+\item The number of clock cycles to run the simulation
+\end{DoxyItemize}
+
+It then\+:
+\begin{DoxyItemize}
+\item Initializes the \doxylink{class_load_balancer}{Load\+Balancer} with the specified number of servers
+\item Populates the request queue (servers \texorpdfstring{$\ast$}{*} 100)
+\item Simulates the passage of time by calling {\ttfamily increment\+Time()} in a loop
+\item Displays the final results using {\ttfamily show\+Results()}
+\end{DoxyItemize}
+
+\begin{DoxyReturn}{Returns}
+int Exit code (0 on success) 
+\end{DoxyReturn}

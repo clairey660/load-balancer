@@ -1,0 +1,38 @@
+\doxysection{Request Struct Reference}
+\hypertarget{struct_request}{}\label{struct_request}\index{Request@{Request}}
+
+
+Represents a single web request to be processed by a web server.  
+
+
+
+
+{\ttfamily \#include $<$Request.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_request_a9331de2ccac6bca9a37616d103db6568}\label{struct_request_a9331de2ccac6bca9a37616d103db6568} 
+std\+::string {\bfseries ip\+\_\+in}
+\begin{DoxyCompactList}\small\item\em The source IP address of the request. \end{DoxyCompactList}\item 
+\Hypertarget{struct_request_a789e85de4e06e293c519fa6ed14539f3}\label{struct_request_a789e85de4e06e293c519fa6ed14539f3} 
+std\+::string {\bfseries ip\+\_\+out}
+\begin{DoxyCompactList}\small\item\em The destination IP address of the request. \end{DoxyCompactList}\item 
+\Hypertarget{struct_request_adb2761a94d4c7e27be30585a8ee0abf1}\label{struct_request_adb2761a94d4c7e27be30585a8ee0abf1} 
+int {\bfseries time\+\_\+required}
+\begin{DoxyCompactList}\small\item\em The number of clock cycles needed to complete the request. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a single web request to be processed by a web server. 
+
+Each request has\+:
+\begin{DoxyItemize}
+\item an input IP address (source),
+\item an output IP address (destination),
+\item and a time requirement indicating how many clock cycles are needed to process it. 
+\end{DoxyItemize}
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/Request.\+h\end{DoxyCompactItemize}

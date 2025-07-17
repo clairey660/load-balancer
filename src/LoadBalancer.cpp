@@ -15,8 +15,8 @@
  * @param numOfServers The number of Webserver instances to create.
  */
 LoadBalancer::LoadBalancer(int numOfServers) : curTime(0), numRequestsProcessed(0),
-                                               observedMinRequestTime(INT_MAX),
-                                               observedMaxRequestTime(INT_MIN)
+                                               minRequestTime(INT_MAX),
+                                               maxRequestTime(INT_MIN)
 {
     // create the number of webservers requesteds
     srand(time(0));
@@ -44,6 +44,19 @@ LoadBalancer::~LoadBalancer()
 }
 
 /**
+ * @brief Generates a random IP address and converts to a string.
+ *
+ * @return string value of random IP address.
+ */
+std::string LoadBalancer::generateRandIP()
+{
+    return std::to_string(rand() % 256) + "." +
+           std::to_string(rand() % 256) + "." +
+           std::to_string(rand() % 256) + "." +
+           std::to_string(rand() % 256);
+}
+
+/**
  * @brief Populates the request queue with randomly generated requests.
  *
  * Each request has a randomly generated IP address and a processing time between 1 and 10.
@@ -56,21 +69,15 @@ void LoadBalancer::populateQueue(int fullQueue)
     for (int i = 0; i < fullQueue; ++i)
     {
         Request r;
-        r.ip_in = std::to_string(rand() % 256) + "." +
-                  std::to_string(rand() % 256) + "." +
-                  std::to_string(rand() % 256) + "." +
-                  std::to_string(rand() % 256);
-        r.ip_out = std::to_string(rand() % 256) + "." +
-                   std::to_string(rand() % 256) + "." +
-                   std::to_string(rand() % 256) + "." +
-                   std::to_string(rand() % 256);
+        r.ip_in = generateRandIP();
+        r.ip_out = generateRandIP();
         r.time_required = 1 + (rand() % 10);
 
         // Update observed min/max
-        if (r.time_required < observedMinRequestTime)
-            observedMinRequestTime = r.time_required;
-        if (r.time_required > observedMaxRequestTime)
-            observedMaxRequestTime = r.time_required;
+        if (r.time_required < minRequestTime)
+            minRequestTime = r.time_required;
+        if (r.time_required > maxRequestTime)
+            maxRequestTime = r.time_required;
 
         logFile << "Request " << i + 1 << ": from " << r.ip_in << " to " << r.ip_out
                 << " requires " << r.time_required << " cycles\n";
@@ -108,11 +115,37 @@ void LoadBalancer::distributeRequests()
 void LoadBalancer::incrementTime()
 {
     ++curTime;
+    const int maxServers = 100;
+    const int minServers = 1;
+
+    if (requestQueue.size() > servers.size() * 50 && servers.size() < maxServers)
+    {
+        servers.push_back(Webserver());
+        logFile << "[Time " << curTime << "] Added a new server. Total servers: " << servers.size() << "\n";
+    }
+
+    // Remove servers (if you implemented shutdown logic)
+    else if (requestQueue.size() < servers.size() * 10 && servers.size() > minServers)
+    {
+        servers.pop_back();
+        logFile << "[Time " << curTime << "] Removed a server. Total servers: " << servers.size() << "\n";
+    }
+
     int activeServers = 0;
     int idleServers = 0;
 
     for (size_t i = 0; i < servers.size(); ++i)
     {
+        if (rand() % 10 < 3)
+        { // 30% chance
+            int time = rand() % (maxRequestTime - minRequestTime + 1) + minRequestTime;
+            Request r;
+            r.ip_in = generateRandIP();
+            r.ip_out = generateRandIP();
+            r.time_required = time;
+            requestQueue.push_back(r);
+        }
+
         if (servers[i].isBusy())
         {
             servers[i].incrementTime();
@@ -152,7 +185,7 @@ void LoadBalancer::showResults(int time, int queueSize)
     logFile << "Initial Queue Size       : " << queueSize << "\n";
     logFile << "Final Queue Size         : " << requestQueue.size() << "\n";
     logFile << "Request Time Range       : "
-            << observedMinRequestTime << " to " << observedMaxRequestTime << " cycles\n";
+            << minRequestTime << " to " << maxRequestTime << " cycles\n";
     logFile << "Total Requests Processed : " << numRequestsProcessed << "\n";
 
     bool allProcessed = allRequestsProcessed();

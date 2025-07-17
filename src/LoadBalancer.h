@@ -22,8 +22,15 @@ private:
     RequestQueue requestQueue;      /**< Queue of pending requests */
     int curTime;                    /**< Current simulation time (in clock cycles) */
     int numRequestsProcessed;       /**< Number of requests processed by the servers */
-    int observedMinRequestTime;
-    int observedMaxRequestTime;
+    int minRequestTime;
+    int maxRequestTime;
+
+    /**
+     * @brief Generates a random IP address.
+     *
+     * @return string value of random IP address.
+     */
+    std::string generateRandIP();
 
     /**
      * @brief Distributes requests from the queue to any available (idle) servers.
