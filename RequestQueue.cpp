@@ -36,7 +36,7 @@ Request RequestQueue::pop()
  * @brief Checks whether the queue is empty.
  * @return true if the queue is empty, false otherwise.
  */
-bool RequestQueue::isEmpty()
+bool RequestQueue::isEmpty() const
 {
     return queue.empty();
 }

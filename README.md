@@ -2,6 +2,6 @@
 
 How to run:
 In terminal, inside load-balancer folder, run
-`$ make`
-`$ ./load_balancer`
-`$ make clean`
+`$ make`,
+`$ ./load_balancer`,
+`$ make clean`.

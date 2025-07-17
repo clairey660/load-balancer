@@ -35,7 +35,7 @@ public:
      * @brief Checks if the queue is empty.
      * @return true if empty, false otherwise.
      */
-    bool isEmpty();
+    bool isEmpty() const;
 
     /**
      * @brief Returns the number of Requests in the queue.

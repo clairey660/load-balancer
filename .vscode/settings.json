@@ -63,6 +63,14 @@
         "concepts": "cpp",
         "memory": "cpp",
         "type_traits": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "deque": "cpp",
+        "iomanip": "cpp",
+        "iterator": "cpp",
+        "queue": "cpp",
+        "utility": "cpp",
+        "functional": "cpp",
+        "memory_resource": "cpp",
+        "*.inc": "cpp"
     }
 }

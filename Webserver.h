@@ -35,5 +35,13 @@ public:
      * @return true if busy, false otherwise.
      */
     bool isBusy();
+    /**
+     * @brief Checks whether the server is currently idle.
+     *
+     * A server is considered idle if it is not processing any request.
+     *
+     * @return true if the server has no current request; false otherwise.
+     */
+    bool isIdle() const;
 };
 #endif // WEBSERVER_H

@@ -1,9 +1,11 @@
 #include "LoadBalancer.h"
 #include "Webserver.h"
+#include "RequestQueue.h"
 
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <iomanip>
 
 /**
  * @brief Constructs the LoadBalancer and initializes web servers.
@@ -12,14 +14,33 @@
  *
  * @param numOfServers The number of Webserver instances to create.
  */
-LoadBalancer::LoadBalancer(int numOfServers) : curTime(0), numRequestsProcessed(0)
+LoadBalancer::LoadBalancer(int numOfServers) : curTime(0), numRequestsProcessed(0),
+                                               observedMinRequestTime(INT_MAX),
+                                               observedMaxRequestTime(INT_MIN)
 {
     // create the number of webservers requesteds
     srand(time(0));
+    logFile.open("simulation_log.txt");
+    if (!logFile.is_open())
+    {
+        std::cerr << "Error opening simulation_log.txt for writing.\n";
+    }
+
     for (int i = 0; i < numOfServers; ++i)
     {
         servers.push_back(Webserver());
     }
+}
+
+/**
+ * @brief Deconstructs the LoadBalancer.
+ *
+ * Closes the log file.
+ */
+LoadBalancer::~LoadBalancer()
+{
+    if (logFile.is_open())
+        logFile.close();
 }
 
 /**
@@ -31,6 +52,7 @@ LoadBalancer::LoadBalancer(int numOfServers) : curTime(0), numRequestsProcessed(
  */
 void LoadBalancer::populateQueue(int fullQueue)
 {
+    logFile << "Populating queue with " << fullQueue << " requests.\n";
     for (int i = 0; i < fullQueue; ++i)
     {
         Request r;
@@ -38,13 +60,21 @@ void LoadBalancer::populateQueue(int fullQueue)
                   std::to_string(rand() % 256) + "." +
                   std::to_string(rand() % 256) + "." +
                   std::to_string(rand() % 256);
-
         r.ip_out = std::to_string(rand() % 256) + "." +
                    std::to_string(rand() % 256) + "." +
                    std::to_string(rand() % 256) + "." +
                    std::to_string(rand() % 256);
-
         r.time_required = 1 + (rand() % 10);
+
+        // Update observed min/max
+        if (r.time_required < observedMinRequestTime)
+            observedMinRequestTime = r.time_required;
+        if (r.time_required > observedMaxRequestTime)
+            observedMaxRequestTime = r.time_required;
+
+        logFile << "Request " << i + 1 << ": from " << r.ip_in << " to " << r.ip_out
+                << " requires " << r.time_required << " cycles\n";
+
         requestQueue.push_back(r);
     }
 }
@@ -56,12 +86,16 @@ void LoadBalancer::populateQueue(int fullQueue)
  */
 void LoadBalancer::distributeRequests()
 {
-    for (Webserver &server : servers)
+    for (size_t i = 0; i < servers.size(); ++i)
     {
-        if (!server.isBusy() && !requestQueue.isEmpty())
+        if (!servers[i].isBusy() && !requestQueue.isEmpty())
         {
             Request r = requestQueue.pop();
-            server.assignRequest(r);
+            servers[i].assignRequest(r);
+
+            logFile << "[Time " << curTime << "] Server " << i + 1 << " assigned request from "
+                    << r.ip_in << " to " << r.ip_out << " ("
+                    << r.time_required << " cycles)\n";
         }
     }
 }
@@ -74,19 +108,35 @@ void LoadBalancer::distributeRequests()
 void LoadBalancer::incrementTime()
 {
     ++curTime;
-    for (Webserver &server : servers)
+    int activeServers = 0;
+    int idleServers = 0;
+
+    for (size_t i = 0; i < servers.size(); ++i)
     {
-        if (server.isBusy())
+        if (servers[i].isBusy())
         {
-            server.incrementTime();
-            if (!server.isBusy())
+            servers[i].incrementTime();
+
+            if (!servers[i].isBusy())
             {
                 numRequestsProcessed++;
+                logFile << "[Time " << curTime << "] Server " << i + 1 << " finished processing a request.\n";
             }
+            activeServers++;
+        }
+        else
+        {
+            idleServers++;
         }
     }
 
     distributeRequests();
+
+    // Log status for this tick
+    logFile << "[Time " << curTime << "] Active Servers: " << activeServers
+            << ", Idle Servers: " << idleServers
+            << ", Requests in Queue: " << requestQueue.size()
+            << ", Requests Processed: " << numRequestsProcessed << "\n";
 }
 
 /**
@@ -94,9 +144,43 @@ void LoadBalancer::incrementTime()
  *
  * Displays total clock cycles elapsed, requests processed, and queue size.
  */
-void LoadBalancer::showResults()
+void LoadBalancer::showResults(int time, int queueSize)
 {
-    std::cout << "Simulation Time Elapsed: " << curTime << " cycles\n";
-    std::cout << "Total Requests Processed: " << numRequestsProcessed << "\n";
-    std::cout << "Requests Remaining in Queue: " << requestQueue.size() << "\n";
+    logFile << "\n=== Simulation Summary ===\n";
+    logFile << "Number of Servers        : " << servers.size() << "\n";
+    logFile << "Simulation Clock Cycles  : " << curTime << "\n";
+    logFile << "Initial Queue Size       : " << queueSize << "\n";
+    logFile << "Final Queue Size         : " << requestQueue.size() << "\n";
+    logFile << "Request Time Range       : "
+            << observedMinRequestTime << " to " << observedMaxRequestTime << " cycles\n";
+    logFile << "Total Requests Processed : " << numRequestsProcessed << "\n";
+
+    bool allProcessed = allRequestsProcessed();
+    logFile << "All Requests Fully Processed: " << (allProcessed ? "Yes" : "No") << "\n";
+    logFile << "==========================\n";
+
+    logFile.flush();
+}
+
+/**
+ * @brief Determines whether all requests have been processed.
+ *
+ * This method verifies that both the internal request queue is empty and that
+ * every server is currently idle. This ensures that no request is waiting or
+ * being processed.
+ *
+ * @return true if the queue is empty and all servers are idle; false otherwise.
+ */
+bool LoadBalancer::allRequestsProcessed() const
+{
+    if (!requestQueue.isEmpty())
+        return false;
+
+    for (const Webserver &server : servers)
+    {
+        if (!server.isIdle())
+            return false;
+    }
+
+    return true;
 }

@@ -47,6 +47,14 @@ int main()
         lb.incrementTime();
     }
 
-    lb.showResults();
+    lb.showResults(time, numOfServers * 100);
+    if (lb.allRequestsProcessed())
+    {
+        std::cout << "All requests have been fully processed.\n";
+    }
+    else
+    {
+        std::cout << "Warning: Some requests are still in progress or waiting.\n";
+    }
     return 0;
 }

@@ -2,6 +2,7 @@
 #define LOADBALANCER_H
 
 #include <iostream>
+#include <fstream>
 #include "Webserver.h"
 #include "RequestQueue.h"
 
@@ -15,10 +16,14 @@
 class LoadBalancer
 {
 private:
+    std::ofstream logFile; /**< ofstream log file */
+
     std::vector<Webserver> servers; /**< Pool of web servers */
     RequestQueue requestQueue;      /**< Queue of pending requests */
     int curTime;                    /**< Current simulation time (in clock cycles) */
     int numRequestsProcessed;       /**< Number of requests processed by the servers */
+    int observedMinRequestTime;
+    int observedMaxRequestTime;
 
     /**
      * @brief Distributes requests from the queue to any available (idle) servers.
@@ -31,6 +36,11 @@ public:
      * @param numOfServers The number of web servers to create.
      */
     LoadBalancer(int numOfServers);
+
+    /**
+     * @brief Destructs a LoadBalancer.
+     */
+    ~LoadBalancer();
 
     /**
      * @brief Populates the request queue with a specified number of random requests.
@@ -48,7 +58,17 @@ public:
     /**
      * @brief Prints the final results of the simulation to the console.
      */
-    void showResults();
+    void showResults(int time, int queueSize);
+
+    /**
+     * @brief Checks if all requests have been processed by the load balancer.
+     *
+     * This function returns true only if the request queue is empty and all servers
+     * are currently idle (i.e., not processing any tasks).
+     *
+     * @return true if all requests have been processed; false otherwise.
+     */
+    bool allRequestsProcessed() const;
 };
 
 #endif // LOADBALANCER_H

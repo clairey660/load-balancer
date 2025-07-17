@@ -47,3 +47,13 @@ bool Webserver::isBusy()
 {
     return busy;
 }
+
+/**
+ * @brief Returns whether the server is currently idle.
+ *
+ * @return true if no request is being processed; false otherwise.
+ */
+bool Webserver::isIdle() const
+{
+    return clockRemaining == 0;
+}
