@@ -24,6 +24,7 @@ private:
     int numRequestsProcessed;       /**< Number of requests processed by the servers */
     int minRequestTime;
     int maxRequestTime;
+    int rejectedRequests;
 
     /**
      * @brief Generates a random IP address.

@@ -7,6 +7,8 @@
 #include <ctime>
 #include <iomanip>
 
+const int MAX_QUEUE_SIZE = 10000;
+
 /**
  * @brief Constructs the LoadBalancer and initializes web servers.
  *
@@ -20,6 +22,7 @@ LoadBalancer::LoadBalancer(int numOfServers) : curTime(0), numRequestsProcessed(
 {
     // create the number of webservers requesteds
     srand(time(0));
+    rejectedRequests = 0;
     logFile.open("simulation_log.txt");
     if (!logFile.is_open())
     {
@@ -82,7 +85,14 @@ void LoadBalancer::populateQueue(int fullQueue)
         logFile << "Request " << i + 1 << ": from " << r.ip_in << " to " << r.ip_out
                 << " requires " << r.time_required << " cycles\n";
 
-        requestQueue.push_back(r);
+        if (requestQueue.size() < MAX_QUEUE_SIZE)
+        {
+            requestQueue.push_back(r);
+        }
+        else
+        {
+            ++rejectedRequests;
+        }
     }
 }
 
@@ -143,7 +153,14 @@ void LoadBalancer::incrementTime()
             r.ip_in = generateRandIP();
             r.ip_out = generateRandIP();
             r.time_required = time;
-            requestQueue.push_back(r);
+            if (requestQueue.size() < MAX_QUEUE_SIZE)
+            {
+                requestQueue.push_back(r);
+            }
+            else
+            {
+                ++rejectedRequests;
+            }
         }
 
         if (servers[i].isBusy())
@@ -186,6 +203,7 @@ void LoadBalancer::showResults(int time, int queueSize)
     logFile << "Final Queue Size         : " << requestQueue.size() << "\n";
     logFile << "Request Time Range       : "
             << minRequestTime << " to " << maxRequestTime << " cycles\n";
+    logFile << "Total Rejected Requests : " << rejectedRequests << "\n";
     logFile << "Total Requests Processed : " << numRequestsProcessed << "\n";
 
     bool allProcessed = allRequestsProcessed();
