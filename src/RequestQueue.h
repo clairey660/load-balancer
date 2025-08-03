@@ -41,6 +41,6 @@ public:
      * @brief Returns the number of Requests in the queue.
      * @return The size of the queue.
      */
-    int size() const;
+    size_t size() const;
 };
 #endif // REQUESTQUEUE_H

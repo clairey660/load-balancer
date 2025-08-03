@@ -1,4 +1,5 @@
 #include "RequestQueue.h"
+#include <stdexcept>
 
 /**
  * @brief Constructor initializes an empty queue.
@@ -45,7 +46,7 @@ bool RequestQueue::isEmpty() const
  * @brief Returns the current number of Requests in the queue.
  * @return The number of requests.
  */
-int RequestQueue::size() const
+size_t RequestQueue::size() const
 {
-    return static_cast<int>(queue.size());
+    return queue.size();
 }
