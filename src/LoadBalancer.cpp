@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <climits>
 #include <iomanip>
 
 const int MAX_QUEUE_SIZE = 10000;
@@ -125,8 +126,8 @@ void LoadBalancer::distributeRequests()
 void LoadBalancer::incrementTime()
 {
     ++curTime;
-    const int maxServers = 100;
-    const int minServers = 1;
+    const size_t maxServers = 100;
+    const size_t minServers = 1;
 
     if (requestQueue.size() > servers.size() * 50 && servers.size() < maxServers)
     {
